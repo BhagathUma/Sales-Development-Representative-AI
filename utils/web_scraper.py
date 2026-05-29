@@ -8,7 +8,7 @@ def scrape_website(url: str):
 
         headers = {
             "User-Agent":
-            "Mozilla/5.0"
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
 
         response = requests.get(
@@ -30,7 +30,7 @@ def scrape_website(url: str):
         title = (
             soup.title.string.strip()
             if soup.title
-            else ""
+            else " "
         )
 
         paragraphs = soup.find_all("p")

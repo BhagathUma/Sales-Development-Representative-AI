@@ -1,24 +1,31 @@
 import json
-from services.gemini_service import (
-    generate_response
+# from services.gemini_service import (
+#     generate_response
+# )
+from services.gemini_service import generate_json
+from utils.json_parser import (
+    clean_json_response
 )
-
+from models.company_analysis import (
+    CompanyAnalysis
+)
 def research_company(scraped_data):
 
     prompt = f"""
-You are an expert AI sales analyst.
+You are an expert B2B sales analyst.
 
-Analyze this company.
+Analyze the company below.
 
-COMPANY TITLE:
+TITLE:
 {scraped_data['title']}
 
-WEBSITE CONTENT:
+CONTENT:
 {scraped_data['content']}
 
 Return ONLY valid JSON.
 
-Format:
+Schema:
+
 {{
   "industry": "",
   "company_summary": "",
@@ -28,12 +35,20 @@ Format:
   "pain_points": [],
   "ai_opportunities": []
 }}
+
+Do not include markdown.
+Do not explain anything.
+Return JSON only.
 """
 
-    response = generate_response(prompt)
+    response = generate_json(prompt)
 
     try:
-        return json.loads(response)
+        parsed_response = clean_json_response(response)
+
+        validated = CompanyAnalysis(**parsed_response)
+
+        return validated.model_dump()
 
     except:
         return {
