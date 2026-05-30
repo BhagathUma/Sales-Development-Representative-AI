@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from utils.web_scraper import scrape_website
+from fastapi.middleware.cors import CORSMiddleware
 
 from agents.research_agent import (
     research_company
@@ -25,6 +26,18 @@ from workflows.sdr_workflow import (
 )
 
 app = FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def home():
